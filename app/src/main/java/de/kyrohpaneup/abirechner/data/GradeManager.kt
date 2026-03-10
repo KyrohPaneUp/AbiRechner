@@ -1,10 +1,10 @@
 package de.kyrohpaneup.abirechner.data
 
-import android.content.Context
-import android.util.Log
-import de.kyrohpaneup.abirechner.data.grades.Grade
-import de.kyrohpaneup.abirechner.data.grades.HeadGrade
+import de.kyrohpaneup.abirechner.data.database.Grade
+import de.kyrohpaneup.abirechner.data.database.HeadGrade
 import java.util.UUID
+import kotlin.math.floor
+import kotlin.math.round
 
 class GradeManager {
 
@@ -37,6 +37,13 @@ class GradeManager {
             "$base$suffix"
         }
         else -> "6"
+    }
+
+    fun getYearFromId(id: Double?): String {
+        if (id == null) return ""
+        val year: Int = floor(id).toInt()
+        val semester: Int = round(((id - year) * 10)).toInt()
+        return "Year $year, semester $semester"
     }
 
     fun calculateGrades(

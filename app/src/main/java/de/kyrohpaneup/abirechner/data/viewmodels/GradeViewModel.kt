@@ -5,10 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import de.kyrohpaneup.abirechner.data.GradeManager
-import de.kyrohpaneup.abirechner.data.grades.Grade
-import de.kyrohpaneup.abirechner.data.grades.GradeDao
-import de.kyrohpaneup.abirechner.data.grades.HeadGrade
+import de.kyrohpaneup.abirechner.data.database.dao.GradeDao
+import de.kyrohpaneup.abirechner.data.database.HeadGrade
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID

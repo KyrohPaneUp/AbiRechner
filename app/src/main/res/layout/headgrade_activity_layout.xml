@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/subjectText"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -21,6 +21,9 @@
             android:layout_marginHorizontal="12dp"
             android:layout_marginBottom="12dp"
             android:importantForAutofill="no"
+            android:inputType="none"
+            android:clickable="true"
+            android:focusable="false"
             android:hint="Subject"
 
             android:textStyle="bold"
@@ -31,8 +34,9 @@
 
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-        </EditText>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="HardcodedText,KeyboardInaccessibleWidget">
+        </AutoCompleteTextView>
 
         <ListView
             android:id="@+id/listView"
@@ -103,19 +107,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/year_text"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
-                android:inputType="textShortMessage"
+                android:inputType="none"
+                android:clickable="true"
+                android:focusable="false"
                 android:hint="Year"
                 android:importantForAutofill="no"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/year_img"
-                tools:ignore="HardcodedText,LabelFor" />
+                tools:ignore="HardcodedText,KeyboardInaccessibleWidget,LabelFor" />
 
             <ImageView
                 android:id="@+id/year_img"

@@ -8,9 +8,10 @@ import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.kyrohpaneup.abirechner.R
-import de.kyrohpaneup.abirechner.data.AppDatabase
+import de.kyrohpaneup.abirechner.adapters.GradeAdapter
+import de.kyrohpaneup.abirechner.data.database.AppDatabase
 import de.kyrohpaneup.abirechner.data.GradeManager
-import de.kyrohpaneup.abirechner.data.grades.Grade
+import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.viewmodels.ParentGradeViewModel
 import de.kyrohpaneup.abirechner.data.viewmodels.ParentGradeViewModelFactory
 

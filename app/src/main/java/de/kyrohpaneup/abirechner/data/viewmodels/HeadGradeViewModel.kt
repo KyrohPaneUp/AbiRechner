@@ -6,21 +6,30 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import de.kyrohpaneup.abirechner.data.GradeManager
-import de.kyrohpaneup.abirechner.data.grades.Grade
-import de.kyrohpaneup.abirechner.data.grades.GradeDao
-import de.kyrohpaneup.abirechner.data.grades.HeadGrade
+import de.kyrohpaneup.abirechner.data.database.Grade
+import de.kyrohpaneup.abirechner.data.database.dao.GradeDao
+import de.kyrohpaneup.abirechner.data.database.HeadGrade
+import de.kyrohpaneup.abirechner.data.database.Subject
+import de.kyrohpaneup.abirechner.data.database.dao.SubjectDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HeadGradeViewModel(
-    private val dao: GradeDao
+    private val dao: GradeDao,
+    private val subjectDao: SubjectDao
 ) : ViewModel() {
 
     private val _headGrade = MutableLiveData<HeadGrade>()
     val headGrade: LiveData<HeadGrade> = _headGrade
 
+    private val _subject = MutableLiveData<Subject>()
+    val subject: LiveData<Subject> = _subject
+
     private val _childGrades = MutableLiveData<List<Grade>>()
     val childGrades: LiveData<List<Grade>> = _childGrades
+
+    private val _subjects = MutableLiveData<List<Subject>>()
+    val subjects: LiveData<List<Subject>> = _subjects
 
     private var headGradeId: String = ""
 
@@ -33,6 +42,14 @@ class HeadGradeViewModel(
 
             val children = dao.getChildGrades(id)
             _childGrades.postValue(children)
+
+            if (head?.subject != null) {
+                val subject = subjectDao.getSubjectFromId(head.subject!!).firstOrNull()
+                subject?.let { _subject.postValue(it) }
+            }
+
+            val subjects = subjectDao.getAllSubjects()
+            _subjects.postValue(subjects)
         }
     }
 
@@ -47,7 +64,7 @@ class HeadGradeViewModel(
         }
     }
 
-    fun updateHead(subject: String, teacher: String, year: String) {
+    fun updateHead(subject: String?, teacher: String, year: Double?) {
         val current = _headGrade.value ?: return
         current.subject = subject
         current.teacher = teacher
@@ -82,9 +99,10 @@ class HeadGradeViewModel(
 }
 
 class HeadGradeViewModelFactory(
-    private val dao: GradeDao
+    private val dao: GradeDao,
+    private val subjectDao: SubjectDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return HeadGradeViewModel(dao) as T
+        return HeadGradeViewModel(dao, subjectDao) as T
     }
 }

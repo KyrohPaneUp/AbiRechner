@@ -1,10 +1,12 @@
-package de.kyrohpaneup.abirechner.data.grades
+package de.kyrohpaneup.abirechner.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import de.kyrohpaneup.abirechner.data.database.Grade
+import de.kyrohpaneup.abirechner.data.database.HeadGrade
 
 @Dao
 interface GradeDao {

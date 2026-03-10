@@ -8,9 +8,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import de.kyrohpaneup.abirechner.R
-import de.kyrohpaneup.abirechner.data.AppDatabase
+import de.kyrohpaneup.abirechner.data.database.AppDatabase
 import de.kyrohpaneup.abirechner.data.GradeManager
-import de.kyrohpaneup.abirechner.data.grades.Grade
+import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.viewmodels.ChildGradeViewModel
 import de.kyrohpaneup.abirechner.data.viewmodels.ChildGradeViewModelFactory
 

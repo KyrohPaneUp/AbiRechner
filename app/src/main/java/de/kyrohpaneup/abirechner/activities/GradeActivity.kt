@@ -6,29 +6,14 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ListView
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.lifecycle.ViewModelProvider
 import de.kyrohpaneup.abirechner.R
-import de.kyrohpaneup.abirechner.data.AppDatabase
-import de.kyrohpaneup.abirechner.data.grades.GradeDao
-import de.kyrohpaneup.abirechner.data.grades.HeadGrade
+import de.kyrohpaneup.abirechner.adapters.HeadGradeAdapter
+import de.kyrohpaneup.abirechner.data.database.AppDatabase
+import de.kyrohpaneup.abirechner.data.database.dao.GradeDao
+import de.kyrohpaneup.abirechner.data.database.HeadGrade
 import de.kyrohpaneup.abirechner.data.viewmodels.GradeViewModel
 import de.kyrohpaneup.abirechner.data.viewmodels.GradeViewModelFactory
-import de.kyrohpaneup.abirechner.ui.theme.AbiRechnerTheme
 
 class GradeActivity : ComponentActivity() {
     private var grades: MutableList<HeadGrade> = mutableListOf()

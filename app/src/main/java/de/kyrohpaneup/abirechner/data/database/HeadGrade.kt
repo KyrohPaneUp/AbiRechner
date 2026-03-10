@@ -1,4 +1,4 @@
-package de.kyrohpaneup.abirechner.data.grades
+package de.kyrohpaneup.abirechner.data.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -10,5 +10,5 @@ data class HeadGrade(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "subject") var subject: String?,
     @ColumnInfo(name = "teacher") var teacher: String?,
-    @ColumnInfo(name = "year") var year: String?,
+    @ColumnInfo(name = "year") var year: Double?,
     @ColumnInfo(name = "grade") var grade: Int?)

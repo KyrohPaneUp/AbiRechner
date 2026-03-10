@@ -1,11 +1,9 @@
 package de.kyrohpaneup.abirechner.data.viewmodels
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
 import de.kyrohpaneup.abirechner.data.GradeManager
-import de.kyrohpaneup.abirechner.data.grades.Grade
-import de.kyrohpaneup.abirechner.data.grades.GradeDao
+import de.kyrohpaneup.abirechner.data.database.Grade
+import de.kyrohpaneup.abirechner.data.database.dao.GradeDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

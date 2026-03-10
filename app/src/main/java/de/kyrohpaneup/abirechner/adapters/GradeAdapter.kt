@@ -1,4 +1,4 @@
-package de.kyrohpaneup.abirechner.activities
+package de.kyrohpaneup.abirechner.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import de.kyrohpaneup.abirechner.R
-import de.kyrohpaneup.abirechner.data.grades.Grade
+import de.kyrohpaneup.abirechner.data.database.Grade
 
 class GradeAdapter(context: Context, grades: List<Grade>) :
     ArrayAdapter<Grade>(context, 0, grades) {
