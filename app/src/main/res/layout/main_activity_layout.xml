@@ -9,7 +9,7 @@
 
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/grade_list_view"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_margin="16dp"
@@ -27,19 +27,47 @@
     </ListView>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/grade_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="Add Grade"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grade_list_view"
+        app:layout_constraintVertical_bias="0.875"
+        tools:ignore="MissingConstraints">
+    </Button>
+
+
+    <ListView
+        android:id="@+id/subject_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_margin="16dp"
+        android:background="?attr/colorSurface"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/subject_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.072"
+        tools:visibility="visible">
+
+    </ListView>
+
+    <Button
+        android:id="@+id/subject_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Add Subject"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView"
         app:layout_constraintVertical_bias="0.875"
         tools:ignore="MissingConstraints">
-
-
     </Button>
 
 

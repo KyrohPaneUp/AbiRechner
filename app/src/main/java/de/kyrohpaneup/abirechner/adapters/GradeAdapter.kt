@@ -26,10 +26,10 @@ class GradeAdapter(context: Context, grades: List<Grade>) :
         val gradeTextView = view?.findViewById<TextView>(R.id.gradeText)
 
         subjectTextView?.text =
-            if (grade?.name.isNullOrBlank()) "N/A" else grade.name
+            if (grade?.name.isNullOrBlank()) "N/A" else grade?.name
 
         notesTextView?.text =
-            if (grade?.notes.isNullOrBlank()) "N/A" else grade.notes
+            if (grade?.notes.isNullOrBlank()) "N/A" else grade?.notes
 
         weightTextView?.text =
             grade?.weight?.toString() ?: "N/A"

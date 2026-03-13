@@ -9,8 +9,11 @@ import android.widget.TextView
 import de.kyrohpaneup.abirechner.R
 import de.kyrohpaneup.abirechner.data.database.HeadGrade
 
-class HeadGradeAdapter(context: Context, headGrades: List<HeadGrade>) :
-    ArrayAdapter<HeadGrade>(context, 0, headGrades) {
+class HeadGradeAdapter(
+    context: Context,
+    headGrades: List<HeadGrade>,
+    private val getSubjectName: (String) -> String?
+) : ArrayAdapter<HeadGrade>(context, 0, headGrades) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
@@ -24,11 +27,11 @@ class HeadGradeAdapter(context: Context, headGrades: List<HeadGrade>) :
         val teacherTextView = view?.findViewById<TextView>(R.id.subtitleText)
         val gradeTextView = view?.findViewById<TextView>(R.id.gradeText)
 
-        subjectTextView?.text =
-            if (headGrade?.subject.isNullOrBlank()) "N/A" else headGrade.subject
+        val subjectName = headGrade?.subject?.let { getSubjectName(it) }
+        subjectTextView?.text = if (subjectName.isNullOrBlank()) "N/A" else subjectName
 
         teacherTextView?.text =
-            if (headGrade?.teacher.isNullOrBlank()) "N/A" else headGrade.teacher
+            if (headGrade?.teacher.isNullOrBlank()) "N/A" else headGrade?.teacher
 
         gradeTextView?.text =
             if (headGrade?.grade == null) "N/A" else headGrade.grade.toString()

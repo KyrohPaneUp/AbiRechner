@@ -1,6 +1,5 @@
 package de.kyrohpaneup.abirechner.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -24,8 +23,6 @@ import de.kyrohpaneup.abirechner.data.utils.DoubleIDClass
 import de.kyrohpaneup.abirechner.data.utils.StringIDClass
 
 class HeadGradeActivity : ComponentActivity() {
-
-    private var context: Context = this
 
     private lateinit var listView: ListView
     private lateinit var subjectView: AutoCompleteTextView
@@ -139,8 +136,9 @@ class HeadGradeActivity : ComponentActivity() {
         viewModel.subjects.observe(this) { subjects ->
             val subjectOptions = mutableListOf<StringIDClass>()
             for (subject in subjects) {
-                if (subject.name != null)
-                subjectOptions.add(StringIDClass(subject.id, subject.name!!))
+                if (subject.name != null) {
+                    subjectOptions.add(StringIDClass(subject.id, subject.name!!))
+                }
             }
 
             val subjectAdapter = ArrayAdapter(
@@ -207,17 +205,16 @@ class HeadGradeActivity : ComponentActivity() {
     }
 
     private fun openGradeActivity(grade: Grade) {
-        lateinit var intent: Intent
-        if (grade.isCalculated) {
-            intent = Intent(this, ParentGradeActivity::class.java)
+        val intent: Intent = if (grade.isCalculated) {
+            Intent(this, ParentGradeActivity::class.java)
         } else {
-            intent = Intent(this, ChildGradeActivity::class.java)
+            Intent(this, ChildGradeActivity::class.java)
         }
         intent.putExtra("gradeId", grade.id)
         startActivity(intent)
     }
 
-    fun goToParent() {
+    private fun goToParent() {
         finish()
         val intent = Intent(this, GradeActivity::class.java)
         startActivity(intent)

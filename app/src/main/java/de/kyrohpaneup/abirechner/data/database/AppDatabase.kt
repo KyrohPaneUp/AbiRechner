@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import de.kyrohpaneup.abirechner.data.database.dao.GradeDao
 import de.kyrohpaneup.abirechner.data.database.dao.SubjectDao
 
-@Database(entities = [Grade::class, HeadGrade::class], version = 1)
+@Database(entities = [Grade::class, HeadGrade::class, Subject::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gradeDao(): GradeDao
     abstract fun subjectDao(): SubjectDao

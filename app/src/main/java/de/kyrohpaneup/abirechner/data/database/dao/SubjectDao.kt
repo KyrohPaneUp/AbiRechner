@@ -20,12 +20,12 @@ interface SubjectDao {
     @Update
     suspend fun update(subject: Subject)
 
-    @Query("SELECT * FROM Subject s WHERE s.id = id")
+    @Query("SELECT * FROM Subject WHERE id = :id")
     suspend fun getSubjectFromId(id: String): List<Subject>
 
     @Query("SELECT * FROM Subject")
     suspend fun getAllSubjects(): List<Subject>
 
-    @Query("SELECT * FROM HeadGrade h WHERE h.subject = id")
+    @Query("SELECT * FROM HeadGrade WHERE subject = :id")
     suspend fun getHeadsForSubject(id: String): List<HeadGrade>
 }
