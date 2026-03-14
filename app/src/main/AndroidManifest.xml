@@ -11,12 +11,12 @@
         android:label="AbiRechner"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Base.Theme.AbiRechner">
         <activity
             android:name=".activities.GradeActivity"
             android:exported="true"
             android:label="AbiRechner"
-            android:theme="@style/AppTheme">
+            android:theme="@style/Base.Theme.AbiRechner">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,17 +26,17 @@
         <activity
             android:name=".activities.HeadGradeActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/Base.Theme.AbiRechner">
         </activity>
         <activity
             android:name=".activities.ParentGradeActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/Base.Theme.AbiRechner">
         </activity>
         <activity
             android:name=".activities.ChildGradeActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/Base.Theme.AbiRechner">
         </activity>
     </application>
 

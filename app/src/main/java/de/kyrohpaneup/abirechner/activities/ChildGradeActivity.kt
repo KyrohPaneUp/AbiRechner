@@ -6,20 +6,26 @@ import android.view.View
 import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.datepicker.MaterialDatePicker
 import de.kyrohpaneup.abirechner.R
 import de.kyrohpaneup.abirechner.data.database.AppDatabase
 import de.kyrohpaneup.abirechner.data.GradeManager
 import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.viewmodels.ChildGradeViewModel
 import de.kyrohpaneup.abirechner.data.viewmodels.ChildGradeViewModelFactory
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
-class ChildGradeActivity : ComponentActivity() {
+class ChildGradeActivity : AppCompatActivity() {
 
     private lateinit var titleView: EditText
     private lateinit var notesView: EditText
     private lateinit var ignoreGradeBox: CheckBox
-    private lateinit var dateView: EditText
+    private lateinit var datePicker: DatePicker
     private lateinit var weightText: TextView
     private lateinit var weightBar: SeekBar
     private lateinit var gradeSpinner: Spinner
@@ -55,13 +61,18 @@ class ChildGradeActivity : ComponentActivity() {
         viewModel.loadGrade(gradeId)
 
         saveButton.setOnClickListener { saveGrade() }
+
+        // Fix: Show DatePickerDialog when clicking on the DatePicker
+        datePicker.setOnClickListener {
+            showDatePickerDialog()
+        }
     }
 
     private fun bindViews() {
         titleView = findViewById(R.id.title_text)
         notesView = findViewById(R.id.notes_text)
         ignoreGradeBox = findViewById(R.id.ignore_grade_checkbox)
-        dateView = findViewById(R.id.date_text)
+        datePicker = findViewById(R.id.date_picker)
         weightText = findViewById(R.id.weight_text)
         weightBar = findViewById(R.id.weight_bar)
         gradeSpinner = findViewById(R.id.set_grade_spinner)
@@ -69,6 +80,7 @@ class ChildGradeActivity : ComponentActivity() {
         gradePointsView = findViewById(R.id.grade_points_view)
         saveButton = findViewById(R.id.save_button)
         deleteButton = findViewById(R.id.delete_button)
+        datePicker.setDescendantFocusability(DatePicker.FOCUS_BLOCK_DESCENDANTS)
     }
 
     private fun observeViewModel() {
@@ -78,7 +90,7 @@ class ChildGradeActivity : ComponentActivity() {
             titleView.setText(g.name)
             notesView.setText(g.notes)
             ignoreGradeBox.isChecked = g.ignoreGrade == true
-            dateView.setText(g.date)
+            setDatePickerFromString()
 
             val weight = g.weight ?: 0
             weightBar.progress = weight
@@ -126,12 +138,77 @@ class ChildGradeActivity : ComponentActivity() {
         gradePointsView.text = points.toString()
     }
 
+    // Fix: Renamed from showDatePicker to showDatePickerDialog
+    private fun showDatePickerDialog() {
+        // Get current date from DatePicker or use today
+        val calendar = Calendar.getInstance().apply {
+            set(datePicker.year, datePicker.month, datePicker.dayOfMonth)
+        }
+
+        // Create Material DatePicker
+        val materialDatePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select Date")
+            .setSelection(calendar.timeInMillis)
+            .build()
+
+        materialDatePicker.addOnPositiveButtonClickListener { selection ->
+            // selection is a Long timestamp
+            val date = Date(selection)
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+            // Update the DatePicker with the selected date
+            val selectedCalendar = Calendar.getInstance().apply {
+                time = date
+            }
+            datePicker.updateDate(
+                selectedCalendar.get(Calendar.YEAR),
+                selectedCalendar.get(Calendar.MONTH),
+                selectedCalendar.get(Calendar.DAY_OF_MONTH)
+            )
+        }
+
+        materialDatePicker.show(supportFragmentManager, "DATE_PICKER")
+    }
+
+    private fun setDatePickerFromString(pattern: String = "dd/MM/yyyy") {
+        try {
+            if (grade?.date == null) return
+            val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+            val date = dateFormat.parse(grade?.date!!) ?: return
+
+            val calendar = Calendar.getInstance().apply {
+                time = date
+            }
+
+            datePicker.updateDate(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+        } catch (e: Exception) {
+            val calendar = Calendar.getInstance()
+            datePicker.updateDate(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+        }
+    }
+
     private fun saveGrade() {
+        val day = datePicker.dayOfMonth
+        val month = datePicker.month // Note: month is 0-based (0-11)
+        val year = datePicker.year
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
+
+        val dateString = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.time)
+
         grade?.let {
             it.name = titleView.text.toString()
             it.notes = notesView.text.toString()
             it.ignoreGrade = ignoreGradeBox.isChecked
-            it.date = dateView.text.toString()
+            it.date = dateString
 
             viewModel.updateGrade(it)
             goToParent()

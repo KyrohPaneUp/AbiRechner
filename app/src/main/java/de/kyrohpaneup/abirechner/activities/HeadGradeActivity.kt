@@ -94,6 +94,7 @@ class HeadGradeActivity : ComponentActivity() {
 
         listView.setOnItemClickListener { _, _, position, _ ->
             val clicked = grades[position]
+            updateHead()
             openGradeActivity(clicked)
         }
 
@@ -165,11 +166,7 @@ class HeadGradeActivity : ComponentActivity() {
         }
 
         saveButton.setOnClickListener {
-            viewModel.updateHead(
-                selectedSubjectId,
-                teacherView.text.toString(),
-                selectedYearId
-            )
+            updateHead()
 
             goToParent()
         }
@@ -196,6 +193,14 @@ class HeadGradeActivity : ComponentActivity() {
             val selectedItem = parent.getItemAtPosition(position) as StringIDClass
             selectedSubjectId = selectedItem.id
         }
+    }
+
+    private fun updateHead() {
+        viewModel.updateHead(
+            selectedSubjectId,
+            teacherView.text.toString(),
+            selectedYearId
+        )
     }
 
     private fun updateGradeUI(points: Int) {

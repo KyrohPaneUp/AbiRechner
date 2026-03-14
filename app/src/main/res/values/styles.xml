@@ -1,0 +1,121 @@
+<resources>
+    <!-- Button Styles -->
+    <style name="Widget.AbiRechner.Button" parent="Widget.Material3.Button">
+        <item name="android:textAppearance">@style/TextAppearance.AbiRechner.Button</item>
+        <item name="cornerRadius">@dimen/corner_medium</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <!-- Filled Button Variant -->
+    <style name="Widget.AbiRechner.Button.Filled" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <!-- Outlined Button -->
+    <style name="Widget.AbiRechner.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="strokeColor">?attr/colorOutline</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Text Button -->
+    <style name="Widget.AbiRechner.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Card Style -->
+    <style name="Widget.AbiRechner.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">@dimen/corner_medium</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+
+    <!-- Elevated Card -->
+    <style name="Widget.AbiRechner.Card.Elevated" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardElevation">8dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+    </style>
+
+    <!-- Text Field Style -->
+    <style name="Widget.AbiRechner.TextField" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">?attr/colorSurfaceVariant</item>
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
+        <item name="hintTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
+        <item name="placeholderTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="endIconTint">?attr/colorPrimary</item>
+        <item name="startIconTint">?attr/colorPrimary</item>
+        <item name="boxCornerRadiusTopStart">@dimen/corner_small</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/corner_small</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/corner_small</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/corner_small</item>
+    </style>
+
+    <!-- Dialog Style -->
+    <style name="Widget.AbiRechner.Dialog" parent="ThemeOverlay.Material3.Dialog">
+        <item name="android:windowBackground">?attr/colorSurface</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+        <item name="cornerSize">@dimen/corner_large</item>
+    </style>
+
+    <!-- Bottom Sheet -->
+    <style name="Widget.AbiRechner.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="cornerSizeTopLeft">@dimen/corner_large</item>
+        <item name="cornerSizeTopRight">@dimen/corner_large</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <!-- Tab Layout -->
+    <style name="Widget.AbiRechner.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabIndicatorColor">?attr/colorPrimary</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabSelectedTextColor">?attr/colorPrimary</item>
+        <item name="tabTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="tabRippleColor">?attr/colorPrimary</item>
+        <item name="tabBackground">?attr/colorSurface</item>
+    </style>
+
+    <!-- Switch -->
+    <style name="Widget.AbiRechner.Switch" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="thumbTint">?attr/colorPrimary</item>
+        <item name="trackTint">?attr/colorPrimaryContainer</item>
+    </style>
+
+    <!-- Checkbox -->
+    <style name="Widget.AbiRechner.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="buttonTint">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Radio Button -->
+    <style name="Widget.AbiRechner.RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
+        <item name="buttonTint">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Progress Bar -->
+    <style name="Widget.AbiRechner.ProgressBar" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="android:indeterminateTint">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Slider -->
+    <style name="Widget.AbiRechner.Slider" parent="Widget.Material3.Slider">
+        <item name="thumbColor">?attr/colorPrimary</item>
+        <item name="trackColorActive">?attr/colorPrimary</item>
+        <item name="trackColorInactive">?attr/colorSurfaceVariant</item>
+        <item name="tickColorActive">?attr/colorOnPrimary</item>
+        <item name="tickColorInactive">?attr/colorOnSurfaceVariant</item>
+    </style>
+</resources>

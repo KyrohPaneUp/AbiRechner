@@ -76,6 +76,7 @@ class ParentGradeActivity : ComponentActivity() {
 
         listView.setOnItemClickListener { _, _, position, _ ->
             val clicked = grades[position]
+            updateParent()
             openGradeActivity(clicked)
         }
     }
@@ -124,10 +125,7 @@ class ParentGradeActivity : ComponentActivity() {
         })
 
         saveButton.setOnClickListener {
-            viewModel.updateParent(
-                titleView.text.toString(),
-                weightBar.progress
-            )
+            updateParent()
             goToParent()
         }
 
@@ -137,6 +135,13 @@ class ParentGradeActivity : ComponentActivity() {
         }
     }
 
+    private fun updateParent() {
+        viewModel.updateParent(
+            titleView.text.toString(),
+            weightBar.progress
+        )
+    }
+
     private fun updateGradeUI(points: Int) {
         val manager = GradeManager()
         gradeNumberView.text = manager.getNumberForPoints(points)
@@ -144,11 +149,10 @@ class ParentGradeActivity : ComponentActivity() {
     }
 
     private fun openGradeActivity(grade: Grade) {
-        lateinit var intent: Intent
-        if (grade.isCalculated) {
-            intent = Intent(this, ParentGradeActivity::class.java)
+        val intent: Intent = if (grade.isCalculated) {
+            Intent(this, ParentGradeActivity::class.java)
         } else {
-            intent = Intent(this, ChildGradeActivity::class.java)
+            Intent(this, ChildGradeActivity::class.java)
         }
         intent.putExtra("gradeId", grade.id)
         startActivity(intent)

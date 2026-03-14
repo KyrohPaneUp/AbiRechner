@@ -1,5 +1,7 @@
 <resources>
-    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
+    <!-- Base theme with all color definitions – adapts to day/night -->
+    <style name="Base.Theme.AbiRechner" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Color references (defined in values/colors.xml and values-night/colors.xml) -->
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
@@ -24,27 +26,29 @@
         <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
         <item name="colorOutline">@color/md_theme_outline</item>
         <item name="colorOutlineVariant">@color/md_theme_outlineVariant</item>
-        <item name="colorSurfaceInverse">@color/md_theme_inverseSurface</item>
-        <item name="colorOnSurfaceInverse">@color/md_theme_inverseOnSurface</item>
-        <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
-        <item name="colorPrimaryFixed">@color/md_theme_primaryFixed</item>
-        <item name="colorOnPrimaryFixed">@color/md_theme_onPrimaryFixed</item>
-        <item name="colorPrimaryFixedDim">@color/md_theme_primaryFixedDim</item>
-        <item name="colorOnPrimaryFixedVariant">@color/md_theme_onPrimaryFixedVariant</item>
-        <item name="colorSecondaryFixed">@color/md_theme_secondaryFixed</item>
-        <item name="colorOnSecondaryFixed">@color/md_theme_onSecondaryFixed</item>
-        <item name="colorSecondaryFixedDim">@color/md_theme_secondaryFixedDim</item>
-        <item name="colorOnSecondaryFixedVariant">@color/md_theme_onSecondaryFixedVariant</item>
-        <item name="colorTertiaryFixed">@color/md_theme_tertiaryFixed</item>
-        <item name="colorOnTertiaryFixed">@color/md_theme_onTertiaryFixed</item>
-        <item name="colorTertiaryFixedDim">@color/md_theme_tertiaryFixedDim</item>
-        <item name="colorOnTertiaryFixedVariant">@color/md_theme_onTertiaryFixedVariant</item>
-        <item name="colorSurfaceDim">@color/md_theme_surfaceDim</item>
-        <item name="colorSurfaceBright">@color/md_theme_surfaceBright</item>
-        <item name="colorSurfaceContainerLowest">@color/md_theme_surfaceContainerLowest</item>
-        <item name="colorSurfaceContainerLow">@color/md_theme_surfaceContainerLow</item>
-        <item name="colorSurfaceContainer">@color/md_theme_surfaceContainer</item>
-        <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
-        <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
+
+        <!-- Typography -->
+        <item name="android:fontFamily">sans-serif</item>
+
+        <!-- Elevation overlay -->
+        <item name="elevationOverlayEnabled">true</item>
+        <item name="elevationOverlayColor">?attr/colorOnSurface</item>
+
+        <!-- Material component styles (from your existing styles.xml) -->
+        <item name="buttonStyle">@style/Widget.AbiRechner.Button</item>
+        <item name="materialButtonStyle">@style/Widget.AbiRechner.Button</item>
+        <item name="textInputStyle">@style/Widget.AbiRechner.TextField</item>
+        <item name="cardViewStyle">@style/Widget.AbiRechner.Card</item>
+        <item name="bottomSheetStyle">@style/Widget.AbiRechner.BottomSheet</item>
+        <item name="tabStyle">@style/Widget.AbiRechner.TabLayout</item>
+        <item name="switchStyle">@style/Widget.AbiRechner.Switch</item>
+        <item name="checkboxStyle">@style/Widget.AbiRechner.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.AbiRechner.RadioButton</item>
     </style>
+
+    <!-- Light theme (same as base) -->
+    <style name="Theme.AbiRechner" parent="Base.Theme.AbiRechner" />
+
+    <!-- Dark theme is automatically handled by DayNight, but you can keep an empty override if needed -->
+    <style name="Theme.AbiRechner.Dark" parent="Base.Theme.AbiRechner" />
 </resources>
