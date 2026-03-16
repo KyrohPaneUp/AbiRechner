@@ -22,16 +22,16 @@ class GradeViewModel(
     private val _grades = MutableLiveData<List<HeadGrade>>()
     val grades: LiveData<List<HeadGrade>> = _grades
 
-    private val _subjects = MutableLiveData<List<Subject>>()
-    val subjects: LiveData<List<Subject>> = _subjects
+    private val _subject = MutableLiveData<Subject>()
+    val subject: LiveData<Subject> = _subject
 
-    fun loadData() {
+    fun loadData(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val grades = gradeDao.getAllHeads()
+            val grades = subjectDao.getHeadsForSubject(id)
             _grades.postValue(grades)
 
-            val subjects = subjectDao.getAllSubjects()
-            _subjects.postValue(subjects)
+            val subject = subjectDao.getSubjectFromId(id).firstOrNull()
+            if (subject != null) _subject.postValue(subject!!)
         }
     }
 
@@ -39,29 +39,21 @@ class GradeViewModel(
         val head = UUID.randomUUID().toString()
 
         viewModelScope.launch(Dispatchers.IO) {
-            val newGrade = HeadGrade(head, null, null, null ,0)
+            val newGrade = HeadGrade(head, subject.value?.id, null, null ,0)
             gradeDao.insertHead(newGrade)
 
-            val updated = gradeDao.getAllHeads()
+            val subjectId = subject.value?.id ?: ""
+            val updated = subjectDao.getHeadsForSubject(subjectId)
             _grades.postValue(updated)
         }
     }
 
-    fun addSubject(name: String) {
-        val subject = UUID.randomUUID().toString()
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val newSubject = Subject(subject, name)
-            subjectDao.insert(newSubject)
-
-            val updated = subjectDao.getAllSubjects()
-            _subjects.postValue(updated)
-            Log.d("Subjects","inserted subject $name")
+    fun getSubjectName(): String {
+        if (subject.value?.name == null) {
+            return "N/A"
         }
+        return subject.value?.name!!
     }
-
-    fun getSubjectFromId(id: String): String =
-        subjects.value?.find { it.id == id }?.name ?: "N/A"
 }
 
 class GradeViewModelFactory(

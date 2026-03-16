@@ -38,6 +38,13 @@ class ChildGradeViewModel(
         }
     }
 
+    fun deleteGrade() {
+        val current = _grade.value ?: return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.delete(current)
+        }
+    }
 }
 
 class ChildGradeViewModelFactory(

@@ -28,9 +28,6 @@ class HeadGradeViewModel(
     private val _childGrades = MutableLiveData<List<Grade>>()
     val childGrades: LiveData<List<Grade>> = _childGrades
 
-    private val _subjects = MutableLiveData<List<Subject>>()
-    val subjects: LiveData<List<Subject>> = _subjects
-
     private var headGradeId: String = ""
 
     fun loadHead(id: String) {
@@ -47,9 +44,6 @@ class HeadGradeViewModel(
                 val subject = subjectDao.getSubjectFromId(head.subject!!).firstOrNull()
                 subject?.let { _subject.postValue(it) }
             }
-
-            val subjects = subjectDao.getAllSubjects()
-            _subjects.postValue(subjects)
         }
     }
 
@@ -64,9 +58,8 @@ class HeadGradeViewModel(
         }
     }
 
-    fun updateHead(subject: String?, teacher: String, year: Double?) {
+    fun updateHead(teacher: String, year: Double?) {
         val current = _headGrade.value ?: return
-        current.subject = subject
         current.teacher = teacher
         current.year = year
 
@@ -89,7 +82,7 @@ class HeadGradeViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             dao.deleteHead(current)
 
-            dao.getChildGrades(current.id)?.forEach {
+            dao.getChildGrades(current.id).forEach {
                 dao.delete(it)
             }
         }

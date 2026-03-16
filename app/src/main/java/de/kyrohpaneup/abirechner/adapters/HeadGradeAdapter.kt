@@ -12,7 +12,7 @@ import de.kyrohpaneup.abirechner.data.database.HeadGrade
 class HeadGradeAdapter(
     context: Context,
     headGrades: List<HeadGrade>,
-    private val getSubjectName: (String) -> String?
+    private val getSubjectName: () -> String?
 ) : ArrayAdapter<HeadGrade>(context, 0, headGrades) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -27,7 +27,7 @@ class HeadGradeAdapter(
         val teacherTextView = view?.findViewById<TextView>(R.id.subtitleText)
         val gradeTextView = view?.findViewById<TextView>(R.id.gradeText)
 
-        val subjectName = headGrade?.subject?.let { getSubjectName(it) }
+        val subjectName = headGrade?.subject?.let { getSubjectName() }
         subjectTextView?.text = if (subjectName.isNullOrBlank()) "N/A" else subjectName
 
         teacherTextView?.text =

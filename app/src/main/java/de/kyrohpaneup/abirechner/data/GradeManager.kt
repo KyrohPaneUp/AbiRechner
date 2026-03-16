@@ -1,5 +1,6 @@
 package de.kyrohpaneup.abirechner.data
 
+import android.util.Log
 import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.database.HeadGrade
 import java.util.UUID
@@ -50,6 +51,8 @@ class GradeManager {
         headGrade: HeadGrade,
         gradeList: List<Grade>
     ): CalculationResult {
+
+
 
         val gradeMap: MutableMap<String, Grade> = gradeList.associateBy { it.id }.toMutableMap()
 
@@ -103,9 +106,70 @@ class GradeManager {
             grades = gradeMap.values.toList()
         )
     }
+
+    fun getGradeGraph(
+        headGrade: HeadGrade,
+        grades: List<Grade>
+    ): List<GradeGraphResult> {
+        val gradesByDate = grades
+            .filter { it.date != null }
+            .groupBy { it.date!! }
+            .toSortedMap()
+
+        Log.i("GM", "list = empty? ${gradesByDate.isEmpty()}")
+
+        if (gradesByDate.isEmpty()) return emptyList()
+
+        val resultList = mutableListOf<GradeGraphResult>()
+        val accumulatedGrades = mutableListOf<Grade>()
+
+        for ((date, newGrades) in gradesByDate) {
+            accumulatedGrades.addAll(newGrades)
+
+            val gradeMap = accumulatedGrades.associateBy { it.id }.toMutableMap()
+            val childrenMap = accumulatedGrades.groupBy { it.parentGrade as String }
+
+            fun calculate(gradeId: String): Double {
+                val children = childrenMap[gradeId] ?: emptyList()
+
+                if (children.isEmpty()) {
+                    return (gradeMap[gradeId]?.grade ?: 0).toDouble()
+                }
+
+                var weightedSum = 0.0
+                var totalWeight = 0
+
+                for (child in children) {
+                    val childValue = if (child.isCalculated) {
+                        calculate(child.id)
+                    } else {
+                        (child.grade ?: 0).toDouble()
+                    }
+
+                    val weight = if (child.ignoreGrade) 0 else (child.weight ?: 0)
+
+                    weightedSum += childValue * weight
+                    totalWeight += weight
+                }
+
+                return if (totalWeight == 0) 0.0 else weightedSum / totalWeight
+            }
+
+            val headValue = calculate(headGrade.id)
+            resultList.add(GradeGraphResult(date, headValue))
+        }
+
+        Log.i("GM", "Finished calculating")
+        return resultList
+    }
 }
 
 data class CalculationResult(
     val headGrade: HeadGrade,
     val grades: List<Grade>
+)
+
+data class GradeGraphResult(
+    val x: Long,
+    val y: Double
 )

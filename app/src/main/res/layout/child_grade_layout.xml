@@ -74,18 +74,21 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <DatePicker
-        android:background="@drawable/border"
-        android:id="@+id/date_picker"
+    <!-- Date picker as a clickable text field -->
+    <TextView
+        android:id="@+id/date_text"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginHorizontal="12dp"
         android:layout_marginVertical="24dp"
-        android:autofillHints=""
+        android:background="@drawable/border"
+        android:gravity="center_vertical|start"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:hint="Select date"
+        android:text=""
         android:clickable="true"
         android:focusable="true"
-        android:hint="Date"
-        android:inputType="date"
         android:importantForAutofill="no"
         app:layout_constraintTop_toBottomOf="@id/ignore_grade_layout"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,7 +103,7 @@
         android:layout_marginVertical="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/date_picker">
+        app:layout_constraintTop_toBottomOf="@id/date_text">
 
         <ImageView
             android:id="@+id/percent_img"

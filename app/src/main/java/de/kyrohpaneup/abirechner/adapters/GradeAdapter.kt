@@ -31,11 +31,13 @@ class GradeAdapter(context: Context, grades: List<Grade>) :
         notesTextView?.text =
             if (grade?.notes.isNullOrBlank()) "N/A" else grade?.notes
 
-        weightTextView?.text =
-            grade?.weight?.toString() ?: "N/A"
+        var weight = "N/A"
+        if (grade?.weight != null) weight = grade.weight.toString() + "%"
+        weightTextView?.text = weight
 
-        gradeTextView?.text =
-            grade?.grade?.toString() ?: "N/A"
+        var points = "N/A"
+        if (grade?.grade != null) points = grade.grade.toString() + "P."
+        gradeTextView?.text = points
 
         return view!!
     }

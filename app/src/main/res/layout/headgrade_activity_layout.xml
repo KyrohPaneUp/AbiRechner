@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,43 +12,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <AutoCompleteTextView
+        <TextView
             android:id="@+id/subjectText"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="12dp"
             android:layout_marginBottom="12dp"
-            android:importantForAutofill="no"
-            android:inputType="none"
-            android:clickable="true"
-            android:focusable="false"
-            android:hint="Subject"
-
             android:textStyle="bold"
+            android:textAlignment="center"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="8sp"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeStepGranularity="2sp"
-
+            android:hint="Subject"
+            android:clickable="false"
+            android:focusable="false"
+            android:importantForAutofill="no"
+            android:inputType="none"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="HardcodedText,KeyboardInaccessibleWidget">
-        </AutoCompleteTextView>
+        </TextView>
 
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="300dp"
             android:layout_margin="12dp"
             android:background="?attr/colorSurface"
             android:visibility="visible"
             app:layout_constraintTop_toBottomOf="@id/subjectText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/addGradeButton"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/addGradeButton"
@@ -57,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="Add Grade"
-            app:layout_constraintBottom_toTopOf="@id/teacher_layout"
+            app:layout_constraintTop_toBottomOf="@id/listView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -67,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/year_layout"
+            app:layout_constraintTop_toBottomOf="@id/addGradeButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -95,7 +91,6 @@
                 app:layout_constraintStart_toEndOf="@id/teacher_img"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="HardcodedText,LabelFor" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -104,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/shared_layout"
+            app:layout_constraintTop_toBottomOf="@id/teacher_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -134,17 +129,95 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="ContentDescription" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <include
-            android:id="@+id/shared_layout"
-            layout="@layout/shared_grade_activity_bottom"
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/grade_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="?android:attr/colorBackground"
             app:layout_constraintTop_toBottomOf="@id/year_layout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/grade_layout"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:layout_margin="12dp"
+            app:layout_constraintTop_toBottomOf="@id/grade_chart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/grade_number_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/border"
+                android:text="1+"
+                android:layout_marginHorizontal="2dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeMaxTextSize="200sp"
+                android:autoSizeStepGranularity="2sp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/grade_points_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/border"
+                android:text="15P"
+                android:layout_marginHorizontal="2dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeMaxTextSize="200dp"
+                android:autoSizeStepGranularity="2sp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottom_buttons_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layout_constraintTop_toBottomOf="@id/grade_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/delete_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <Button
+                android:id="@+id/delete_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                app:layout_constraintStart_toEndOf="@id/save_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.core.widget.NestedScrollView>

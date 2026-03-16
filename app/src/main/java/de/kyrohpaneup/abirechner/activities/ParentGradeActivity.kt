@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.kyrohpaneup.abirechner.R
@@ -14,8 +15,9 @@ import de.kyrohpaneup.abirechner.data.GradeManager
 import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.viewmodels.ParentGradeViewModel
 import de.kyrohpaneup.abirechner.data.viewmodels.ParentGradeViewModelFactory
+import de.kyrohpaneup.abirechner.utils.Constant
 
-class ParentGradeActivity : ComponentActivity() {
+class ParentGradeActivity : AppCompatActivity() {
 
     private lateinit var titleView: EditText
     private lateinit var weightView: TextView
@@ -46,7 +48,7 @@ class ParentGradeActivity : ComponentActivity() {
         bindViews()
         setupList()
 
-        gradeId = intent.getStringExtra("gradeId") ?: ""
+        gradeId = intent.getStringExtra(Constant.GRADE_ID) ?: ""
 
         val dao = AppDatabase.getDatabase(this).gradeDao()
         val factory = ParentGradeViewModelFactory(dao)
@@ -154,7 +156,7 @@ class ParentGradeActivity : ComponentActivity() {
         } else {
             Intent(this, ChildGradeActivity::class.java)
         }
-        intent.putExtra("gradeId", grade.id)
+        intent.putExtra(Constant.GRADE_ID, grade.id)
         startActivity(intent)
     }
 
@@ -163,10 +165,10 @@ class ParentGradeActivity : ComponentActivity() {
         val grade = viewModel.parentGrade.value
         if (grade?.parentGrade == grade?.headGrade) {
             intent = Intent(this, HeadGradeActivity::class.java)
-            intent.putExtra("headGradeId", headGradeId)
+            intent.putExtra(Constant.HEADGRADE_ID, headGradeId)
         } else {
             intent = Intent(this, ParentGradeActivity::class.java)
-            intent.putExtra("gradeId", grade?.parentGrade)
+            intent.putExtra(Constant.GRADE_ID, grade?.parentGrade)
         }
         startActivity(intent)
         finish()

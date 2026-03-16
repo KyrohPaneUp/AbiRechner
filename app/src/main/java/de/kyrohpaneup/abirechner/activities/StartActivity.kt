@@ -8,46 +8,39 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import de.kyrohpaneup.abirechner.R
-import de.kyrohpaneup.abirechner.adapters.HeadGradeAdapter
 import de.kyrohpaneup.abirechner.adapters.SubjectAdapter
 import de.kyrohpaneup.abirechner.data.database.AppDatabase
-import de.kyrohpaneup.abirechner.data.database.dao.GradeDao
-import de.kyrohpaneup.abirechner.data.database.HeadGrade
 import de.kyrohpaneup.abirechner.data.database.Subject
 import de.kyrohpaneup.abirechner.data.database.dao.SubjectDao
-import de.kyrohpaneup.abirechner.data.viewmodels.GradeViewModel
-import de.kyrohpaneup.abirechner.data.viewmodels.GradeViewModelFactory
+import de.kyrohpaneup.abirechner.data.viewmodels.SubjectViewModel
+import de.kyrohpaneup.abirechner.data.viewmodels.SubjectViewModelFactory
+import de.kyrohpaneup.abirechner.utils.Constant
 
-class GradeActivity : ComponentActivity() {
-    private var grades: MutableList<HeadGrade> = mutableListOf()
+class StartActivity : AppCompatActivity() {
     private var subjects: MutableList<Subject> = mutableListOf()
     private var context: Context = this
-    private lateinit var gradeButton: Button
     private lateinit var subjectButton: Button
-    private lateinit var gradeListView: ListView
     private lateinit var subjectListView: ListView
-    private lateinit var gradeAdapter: HeadGradeAdapter
     private lateinit var subjectAdapter: SubjectAdapter
 
 
-    private lateinit var viewModel: GradeViewModel
+    private lateinit var viewModel: SubjectViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.main_activity_layout)
+        setContentView(R.layout.start_activity_layout)
 
         bindViews()
         setupList()
 
-        val gradeDao: GradeDao = AppDatabase.getDatabase(this).gradeDao()
         val subjectDao: SubjectDao = AppDatabase.getDatabase(this).subjectDao()
-        val factory = GradeViewModelFactory(gradeDao, subjectDao)
-        viewModel = ViewModelProvider(this, factory)[GradeViewModel::class]
+        val factory = SubjectViewModelFactory(subjectDao)
+        viewModel = ViewModelProvider(this, factory)[SubjectViewModel::class]
 
         viewModel.loadData()
 
@@ -56,37 +49,21 @@ class GradeActivity : ComponentActivity() {
     }
 
     private fun bindViews() {
-        gradeListView = findViewById(R.id.grade_list_view)
-        gradeButton = findViewById(R.id.grade_button)
         subjectListView = findViewById(R.id.subject_list_view)
         subjectButton = findViewById(R.id.subject_button)
     }
 
     private fun setupList() {
-        gradeAdapter = HeadGradeAdapter(context, grades)  { id -> viewModel.getSubjectFromId(id)}
-        gradeListView.adapter = gradeAdapter
-
-        gradeListView.setOnItemClickListener { _, _, position, _ ->
-            val clickedHeadGrade = grades[position]
-            openHeadGradeActivity(clickedHeadGrade)
-        }
-
         subjectAdapter = SubjectAdapter(context, subjects)
         subjectListView.adapter = subjectAdapter
 
         subjectListView.setOnItemClickListener { _, _, position, _ ->
-            //val clickedHeadGrade = grades[position]
-            //openHeadGradeActivity(clickedHeadGrade)
+            val clickedSubject = subjects[position]
+            openGradeActivity(clickedSubject)
         }
     }
 
     private fun observeViewModel() {
-        viewModel.grades.observe(this) { list ->
-            grades.clear()
-            grades.addAll(list)
-            gradeAdapter.notifyDataSetChanged()
-        }
-
         viewModel.subjects.observe(this) { list ->
             subjects.clear()
             subjects.addAll(list)
@@ -95,17 +72,14 @@ class GradeActivity : ComponentActivity() {
     }
 
     private fun setupListeners() {
-        gradeButton.setOnClickListener {
-            viewModel.addHeadGrade()
-        }
         subjectButton.setOnClickListener() {
             showTextInputDialog()
         }
     }
 
-    private fun openHeadGradeActivity(headGrade: HeadGrade) {
-        val intent = Intent(this, HeadGradeActivity::class.java)
-        intent.putExtra("headGradeId", headGrade.id)
+    private fun openGradeActivity(subject: Subject) {
+        val intent = Intent(this, SubjectActivity::class.java)
+        intent.putExtra(Constant.SUBJECT_ID, subject.id)
         startActivity(intent)
     }
 

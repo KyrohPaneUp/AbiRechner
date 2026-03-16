@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.AbiRechner">
         <activity
-            android:name=".activities.GradeActivity"
+            android:name=".activities.StartActivity"
             android:exported="true"
             android:label="AbiRechner"
             android:theme="@style/Base.Theme.AbiRechner">
@@ -22,6 +22,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".activities.SubjectActivity"
+            android:exported="true"
+            android:label="AbiRechner"
+            android:theme="@style/Base.Theme.AbiRechner">
         </activity>
         <activity
             android:name=".activities.HeadGradeActivity"
