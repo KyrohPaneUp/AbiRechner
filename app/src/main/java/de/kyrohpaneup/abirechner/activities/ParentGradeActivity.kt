@@ -3,7 +3,6 @@ package de.kyrohpaneup.abirechner.activities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.*
-import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +15,7 @@ import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.viewmodels.ParentGradeViewModel
 import de.kyrohpaneup.abirechner.data.viewmodels.ParentGradeViewModelFactory
 import de.kyrohpaneup.abirechner.utils.Constant
+import kotlin.math.floor
 
 class ParentGradeActivity : AppCompatActivity() {
 
@@ -91,9 +91,9 @@ class ParentGradeActivity : AppCompatActivity() {
 
             val weight = grade.weight ?: 0
             weightBar.progress = weight
-            weightView.text = "Weight $weight%"
+            "Weight $weight%".also { weightView.text = it }
 
-            val points = grade.grade ?: 0
+            val points = grade.grade ?: 0.0
             updateGradeUI(points)
         }
 
@@ -120,7 +120,7 @@ class ParentGradeActivity : AppCompatActivity() {
 
         weightBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                weightView.text = "Weight $progress%"
+                "Weight $progress%".also { weightView.text = it }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -144,9 +144,9 @@ class ParentGradeActivity : AppCompatActivity() {
         )
     }
 
-    private fun updateGradeUI(points: Int) {
+    private fun updateGradeUI(points: Double) {
         val manager = GradeManager()
-        gradeNumberView.text = manager.getNumberForPoints(points)
+        gradeNumberView.text = manager.getNumberForPoints(floor(points).toInt())
         gradePointsView.text = points.toString()
     }
 

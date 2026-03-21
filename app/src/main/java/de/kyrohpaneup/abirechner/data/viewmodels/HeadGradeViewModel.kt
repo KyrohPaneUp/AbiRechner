@@ -28,6 +28,9 @@ class HeadGradeViewModel(
     private val _childGrades = MutableLiveData<List<Grade>>()
     val childGrades: LiveData<List<Grade>> = _childGrades
 
+    private val _allGrades = MutableLiveData<List<Grade>>()
+    val allGrades: LiveData<List<Grade>> = _allGrades
+
     private var headGradeId: String = ""
 
     fun loadHead(id: String) {
@@ -40,8 +43,11 @@ class HeadGradeViewModel(
             val children = dao.getChildGrades(id)
             _childGrades.postValue(children)
 
+            val allGrades = dao.getAllGradesForHead(id)
+            _allGrades.postValue(allGrades)
+
             if (head?.subject != null) {
-                val subject = subjectDao.getSubjectFromId(head.subject!!).firstOrNull()
+                val subject = subjectDao.getSubjectFromId(head.subject).firstOrNull()
                 subject?.let { _subject.postValue(it) }
             }
         }

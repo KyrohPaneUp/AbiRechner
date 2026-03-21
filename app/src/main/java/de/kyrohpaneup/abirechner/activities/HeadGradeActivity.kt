@@ -3,7 +3,6 @@ package de.kyrohpaneup.abirechner.activities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
@@ -24,10 +23,12 @@ import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.viewmodels.HeadGradeViewModel
 import de.kyrohpaneup.abirechner.data.viewmodels.HeadGradeViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import de.kyrohpaneup.abirechner.adapters.GradeAdapter
 import de.kyrohpaneup.abirechner.data.GradeGraphResult
 import de.kyrohpaneup.abirechner.data.utils.DoubleIDClass
 import de.kyrohpaneup.abirechner.utils.Constant
+import java.util.Locale
 import kotlin.text.*
 
 class HeadGradeActivity : AppCompatActivity() {
@@ -35,7 +36,7 @@ class HeadGradeActivity : AppCompatActivity() {
     private lateinit var listView: ListView
     private lateinit var subjectView: TextView
     private lateinit var teacherView: EditText
-    private lateinit var yearView: AutoCompleteTextView
+    private lateinit var yearView: MaterialAutoCompleteTextView
 
 
     private lateinit var addGradeButton: Button
@@ -128,7 +129,7 @@ class HeadGradeActivity : AppCompatActivity() {
             headGradeId = viewModel.getHeadGradeId()
 
             teacherView.setText(grade.teacher)
-            yearView.setText(gradeManager.getYearFromId(grade.year))
+            yearView.setText(gradeManager.getYearFromId(grade.year), false)
 
             val points = grade.grade ?: 0
             updateGradeUI(points)
@@ -138,8 +139,10 @@ class HeadGradeActivity : AppCompatActivity() {
             grades.clear()
             grades.addAll(list)
             arrayAdapter.notifyDataSetChanged()
+        }
 
-            loadChart(gradeManager.getGradeGraph(viewModel.headGrade.value!!, list))
+        viewModel.allGrades.observe(this) { list ->
+            loadChart(gradeManager.calculateGradeGraph(viewModel.getHeadGradeId(), list))
         }
 
         viewModel.subject.observe(this) { subject ->
@@ -251,7 +254,7 @@ class HeadGradeActivity : AppCompatActivity() {
             val entry = Entry(index.toFloat(), data.y.toFloat())
             grades.add(entry)
 
-            val date = java.text.SimpleDateFormat("dd.MM.yy", java.util.Locale.GERMANY)
+            val date = java.text.SimpleDateFormat("dd.MM.yy", Locale.getDefault())
                 .format(java.util.Date(data.x))
             dateLabels.add(date)
         }
@@ -277,7 +280,7 @@ class HeadGradeActivity : AppCompatActivity() {
 
         lineDataSet.valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                return String.format("%.1f", value)
+                return String().format(Locale.getDefault(), value)
             }
         }
 

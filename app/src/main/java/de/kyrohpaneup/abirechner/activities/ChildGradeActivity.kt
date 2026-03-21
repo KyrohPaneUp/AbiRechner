@@ -15,15 +15,14 @@ import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.viewmodels.ChildGradeViewModel
 import de.kyrohpaneup.abirechner.data.viewmodels.ChildGradeViewModelFactory
 import de.kyrohpaneup.abirechner.utils.Constant
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Calendar
+import kotlin.math.floor
 
 class ChildGradeActivity : AppCompatActivity() {
 
     private lateinit var titleView: EditText
     private lateinit var notesView: EditText
-    private lateinit var ignoreGradeBox: CheckBox
     private lateinit var dateText: TextView
     private lateinit var weightText: TextView
     private lateinit var weightBar: SeekBar
@@ -36,9 +35,6 @@ class ChildGradeActivity : AppCompatActivity() {
     private lateinit var viewModel: ChildGradeViewModel
     private var grade: Grade? = null
     private var gradeId: String = ""
-
-    private val displayFormat = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
-    private val storageFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +73,6 @@ class ChildGradeActivity : AppCompatActivity() {
     private fun bindViews() {
         titleView = findViewById(R.id.title_text)
         notesView = findViewById(R.id.notes_text)
-        ignoreGradeBox = findViewById(R.id.ignore_grade_checkbox)
         dateText = findViewById(R.id.date_text)
         weightText = findViewById(R.id.weight_text)
         weightBar = findViewById(R.id.weight_bar)
@@ -94,7 +89,6 @@ class ChildGradeActivity : AppCompatActivity() {
 
             titleView.setText(g.name)
             notesView.setText(g.notes)
-            ignoreGradeBox.isChecked = g.ignoreGrade == true
 
             // Format date for display if it exists
             g.date?.let { dateMillis ->
@@ -105,18 +99,18 @@ class ChildGradeActivity : AppCompatActivity() {
 
             val weight = g.weight ?: 0
             weightBar.progress = weight
-            weightText.text = "Weight $weight%"
+            "Weight $weight%".also { weightText.text = it }
 
-            val points = g.grade ?: 0
-            updateGradeUI(points)
-            gradeSpinner.setSelection(points)
+            val points = g.grade ?: 0.0
+            updateGradeUI(floor(points).toInt())
+            gradeSpinner.setSelection(floor(points).toInt())
         }
     }
 
     private fun setupWeightBar() {
         weightBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                weightText.text = "Weight $progress%"
+                "Weight $progress%".also { weightText.text = it }
                 grade?.weight = progress
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -136,7 +130,7 @@ class ChildGradeActivity : AppCompatActivity() {
 
         gradeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                grade?.grade = pos
+                grade?.grade = pos.toDouble()
                 updateGradeUI(pos)
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -190,7 +184,7 @@ class ChildGradeActivity : AppCompatActivity() {
         grade?.let { g ->
             g.name = titleView.text.toString()
             g.notes = notesView.text.toString()
-            g.ignoreGrade = ignoreGradeBox.isChecked
+            //g.ignoreGrade = ignoreGradeBox.isChecked
 
             // Set current date if no date is set
             if (g.date == null) {

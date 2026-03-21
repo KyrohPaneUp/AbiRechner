@@ -36,6 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!--
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ignore_grade_layout"
         android:layout_width="match_parent"
@@ -73,6 +74,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    -->
 
     <!-- Date picker as a clickable text field -->
     <TextView
@@ -90,7 +92,7 @@
         android:clickable="true"
         android:focusable="true"
         android:importantForAutofill="no"
-        app:layout_constraintTop_toBottomOf="@id/ignore_grade_layout"
+        app:layout_constraintTop_toBottomOf="@id/notes_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

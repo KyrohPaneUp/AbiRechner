@@ -1,6 +1,5 @@
 package de.kyrohpaneup.abirechner.data
 
-import android.util.Log
 import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.database.HeadGrade
 import java.util.UUID
@@ -10,20 +9,19 @@ import kotlin.math.round
 class GradeManager {
 
     fun createGrade(parent: String?, head: String?, isCalculated: Boolean): Grade {
-        var gradeInt: Int? = 0
+        var gradeDouble: Double? = 0.0
 
         if (isCalculated) {
-            gradeInt = null
+            gradeDouble = null
         }
 
         return Grade(
             UUID.randomUUID().toString(),
-            gradeInt,
+            gradeDouble,
             0,
             null,
             null,
             null,
-            !isCalculated,
             parent,
             head,
             isCalculated
@@ -58,40 +56,39 @@ class GradeManager {
 
         val childrenMap: Map<String, List<Grade>> = gradeList.groupBy { it.parentGrade as String }
 
-        fun calculate(gradeId: String): Int {
+        fun calculate(gradeId: String): Double {
             val children = childrenMap[gradeId] ?: emptyList()
 
             if (children.isEmpty()) {
                 val g = gradeMap[gradeId]
-                return g?.grade ?: 0
+                return g?.grade ?: 0.0
             }
 
             var weightedSum = 0.0
             var totalWeight = 0
 
             for (child in children) {
-                val _childGradeValue = if (child.isCalculated) {
+                val childGradeValueNullable = if (child.isCalculated) {
                     calculate(child.id)
                 } else {
                     child.grade
                 }
 
-                var weight = child.weight ?: 0
-                if (child.ignoreGrade) weight = 0
-                val childGradeValue = _childGradeValue ?: 0
-                weightedSum += childGradeValue * weight
+                val weight = child.weight ?: 0
+                val childGradeValue = childGradeValueNullable ?: 0
+                weightedSum += floor(childGradeValue as Double).toInt() * weight
                 totalWeight += weight
             }
 
-            val result = if (totalWeight == 0) 0 else (weightedSum / totalWeight).toInt()
+            val result = if (totalWeight == 0) 0.0 else (weightedSum / totalWeight).toInt()
 
             gradeMap[gradeId]?.let { g ->
                 if (g.isCalculated) {
-                    g.grade = result
+                    g.grade = result.toDouble()
                 }
             }
 
-            return result
+            return result.toDouble()
         }
 
         gradeMap.values.filter { it.isCalculated }.forEach {
@@ -99,7 +96,7 @@ class GradeManager {
         }
 
         val headValue = calculate(headGrade.id)
-        headGrade.grade = headValue
+        headGrade.grade = floor(headValue).toInt()
 
         return CalculationResult(
             headGrade = headGrade,
@@ -107,59 +104,66 @@ class GradeManager {
         )
     }
 
-    fun getGradeGraph(
-        headGrade: HeadGrade,
+    fun calculateGradeGraph(
+        head: String,
         grades: List<Grade>
     ): List<GradeGraphResult> {
         val gradesByDate = grades
-            .filter { it.date != null }
+            .filter {  it.date != null }
             .groupBy { it.date!! }
             .toSortedMap()
-
-        Log.i("GM", "list = empty? ${gradesByDate.isEmpty()}")
 
         if (gradesByDate.isEmpty()) return emptyList()
 
         val resultList = mutableListOf<GradeGraphResult>()
-        val accumulatedGrades = mutableListOf<Grade>()
 
-        for ((date, newGrades) in gradesByDate) {
-            accumulatedGrades.addAll(newGrades)
+        fun calculateParent(head: String, grades: List<Grade>): Double {
+            var totalGrade = 0.0
+            var totalWeight = 0.0
 
-            val gradeMap = accumulatedGrades.associateBy { it.id }.toMutableMap()
-            val childrenMap = accumulatedGrades.groupBy { it.parentGrade as String }
-
-            fun calculate(gradeId: String): Double {
-                val children = childrenMap[gradeId] ?: emptyList()
-
-                if (children.isEmpty()) {
-                    return (gradeMap[gradeId]?.grade ?: 0).toDouble()
+            for (grade in grades) {
+                if (grade.isCalculated) {
+                    val children = grades.filter { it.parentGrade == grade.id }
+                    grade.grade = calculateParent(grade.id, children)
                 }
-
-                var weightedSum = 0.0
-                var totalWeight = 0
-
-                for (child in children) {
-                    val childValue = if (child.isCalculated) {
-                        calculate(child.id)
-                    } else {
-                        (child.grade ?: 0).toDouble()
-                    }
-
-                    val weight = if (child.ignoreGrade) 0 else (child.weight ?: 0)
-
-                    weightedSum += childValue * weight
-                    totalWeight += weight
+                if (grade.parentGrade == head) {
+                    totalGrade += grade.grade?.times((grade.weight?.toDouble()!! / 100)) ?: totalGrade
+                    totalWeight += grade.weight?.toDouble()!!
                 }
-
-                return if (totalWeight == 0) 0.0 else weightedSum / totalWeight
             }
-
-            val headValue = calculate(headGrade.id)
-            resultList.add(GradeGraphResult(date, headValue))
+            if (totalWeight == 0.0) return 0.0
+            return totalGrade / (totalWeight / 100)
         }
 
-        Log.i("GM", "Finished calculating")
+        fun calculate(grade: Grade): Double {
+            val children = grades
+                .filter { it.date != null && grade.date != null && it.date!! <= grade.date!! }
+
+            val usedGradesByParent = children
+                .filter { it.parentGrade != null }
+                .filter { it.headGrade != null }
+                .filter { it.parentGrade != it.headGrade }
+                .groupBy { it.parentGrade }
+                .toMap()
+
+            val parents: MutableList<Grade> = mutableListOf()
+            val usedGrades: MutableList<Grade> = mutableListOf()
+
+            for (parentId in usedGradesByParent.keys) {
+                val parent = grades.first { it.id == parentId }
+                parents.add(parent)
+            }
+
+            usedGrades.addAll(children)
+            usedGrades.addAll(parents)
+
+            return calculateParent(head, usedGrades)
+        }
+
+        for (grade in gradesByDate) {
+            resultList.add(GradeGraphResult(grade.key, calculate(grade.value.first())))
+        }
+
         return resultList
     }
 }
