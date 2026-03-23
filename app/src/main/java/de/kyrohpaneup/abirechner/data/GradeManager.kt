@@ -50,8 +50,6 @@ class GradeManager {
         gradeList: List<Grade>
     ): CalculationResult {
 
-
-
         val gradeMap: MutableMap<String, Grade> = gradeList.associateBy { it.id }.toMutableMap()
 
         val childrenMap: Map<String, List<Grade>> = gradeList.groupBy { it.parentGrade as String }
@@ -104,6 +102,40 @@ class GradeManager {
         )
     }
 
+    fun calculateSubjectGraph(headsById: Map<String, HeadGrade>, gradesByHead: Map<String, List<Grade>>): List<GradeGraphResult> {
+        val results = mutableListOf<GradeGraphResult>()
+        for (head in gradesByHead.keys) {
+            val result =
+                headsById[head]?.year?.let {
+                    GradeGraphResult(
+                        it, calculateParent(head, gradesByHead.getOrDefault(head,
+                            emptyList())))
+                }
+            if (result != null) {
+                results.add(result)
+            }
+        }
+        return results
+    }
+
+    private fun calculateParent(head: String, grades: List<Grade>): Double {
+        var totalGrade = 0.0
+        var totalWeight = 0.0
+
+        for (grade in grades) {
+            if (grade.isCalculated) {
+                val children = grades.filter { it.parentGrade == grade.id }
+                grade.grade = calculateParent(grade.id, children)
+            }
+            if (grade.parentGrade == head) {
+                totalGrade += grade.grade?.times((grade.weight?.toDouble()!! / 100)) ?: totalGrade
+                totalWeight += grade.weight?.toDouble()!!
+            }
+        }
+        if (totalWeight == 0.0) return 0.0
+        return totalGrade / (totalWeight / 100)
+    }
+
     fun calculateGradeGraph(
         head: String,
         grades: List<Grade>
@@ -116,24 +148,6 @@ class GradeManager {
         if (gradesByDate.isEmpty()) return emptyList()
 
         val resultList = mutableListOf<GradeGraphResult>()
-
-        fun calculateParent(head: String, grades: List<Grade>): Double {
-            var totalGrade = 0.0
-            var totalWeight = 0.0
-
-            for (grade in grades) {
-                if (grade.isCalculated) {
-                    val children = grades.filter { it.parentGrade == grade.id }
-                    grade.grade = calculateParent(grade.id, children)
-                }
-                if (grade.parentGrade == head) {
-                    totalGrade += grade.grade?.times((grade.weight?.toDouble()!! / 100)) ?: totalGrade
-                    totalWeight += grade.weight?.toDouble()!!
-                }
-            }
-            if (totalWeight == 0.0) return 0.0
-            return totalGrade / (totalWeight / 100)
-        }
 
         fun calculate(grade: Grade): Double {
             val children = grades
@@ -174,6 +188,6 @@ data class CalculationResult(
 )
 
 data class GradeGraphResult(
-    val x: Long,
+    val x: Number,
     val y: Double
 )

@@ -20,6 +20,7 @@ import kotlin.math.floor
 class ParentGradeActivity : AppCompatActivity() {
 
     private lateinit var titleView: EditText
+    private lateinit var notesView: EditText
     private lateinit var weightView: TextView
     private lateinit var weightBar: SeekBar
     private lateinit var addGradeButton: Button
@@ -62,6 +63,7 @@ class ParentGradeActivity : AppCompatActivity() {
 
     private fun bindViews() {
         titleView = findViewById(R.id.title_text)
+        notesView = findViewById(R.id.notes_text)
         weightView = findViewById(R.id.weight_text)
         weightBar = findViewById(R.id.weight_bar)
         addGradeButton = findViewById(R.id.add_grade_button)
@@ -88,6 +90,7 @@ class ParentGradeActivity : AppCompatActivity() {
             headGradeId = viewModel.getHeadGradeId()
 
             titleView.setText(grade.name)
+            notesView.setText(grade.notes)
 
             val weight = grade.weight ?: 0
             weightBar.progress = weight
@@ -140,6 +143,7 @@ class ParentGradeActivity : AppCompatActivity() {
     private fun updateParent() {
         viewModel.updateParent(
             titleView.text.toString(),
+            notesView.text.toString(),
             weightBar.progress
         )
     }

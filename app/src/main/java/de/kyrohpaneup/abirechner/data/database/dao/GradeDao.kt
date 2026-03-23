@@ -32,6 +32,9 @@ interface GradeDao {
     @Query("SELECT * FROM grade WHERE head_grade = :hgrade")
     suspend fun getAllGradesForHead(hgrade: String): List<Grade>
 
+    @Query("DELETE FROM grade WHERE head_grade = :hgrade")
+    suspend fun deleteAllGradesForHead(hgrade: String)
+
     // Head Grades
     @Query("SELECT * FROM headgrade")
     suspend fun getAllHeads(): List<HeadGrade>

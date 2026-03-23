@@ -1,13 +1,11 @@
 package de.kyrohpaneup.abirechner.data.viewmodels
 
-import android.util.Log
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import de.kyrohpaneup.abirechner.data.database.dao.GradeDao
-import de.kyrohpaneup.abirechner.data.database.HeadGrade
 import de.kyrohpaneup.abirechner.data.database.Subject
 import de.kyrohpaneup.abirechner.data.database.dao.SubjectDao
 import kotlinx.coroutines.Dispatchers
@@ -37,12 +35,8 @@ class SubjectViewModel(
 
             val updated = subjectDao.getAllSubjects()
             _subjects.postValue(updated)
-            Log.d("Subjects","inserted subject $name")
         }
     }
-
-    fun getSubjectFromId(id: String): String =
-        subjects.value?.find { it.id == id }?.name ?: "N/A"
 }
 
 class SubjectViewModelFactory(

@@ -60,7 +60,7 @@ class HeadGradeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.headgrade_activity_layout)
+        setContentView(R.layout.head_grade_activity_layout)
 
         onBackPressedDispatcher.addCallback(this) {
             goToParent()
@@ -130,6 +130,7 @@ class HeadGradeActivity : AppCompatActivity() {
 
             teacherView.setText(grade.teacher)
             yearView.setText(gradeManager.getYearFromId(grade.year), false)
+            selectedYearId = grade.year
 
             val points = grade.grade ?: 0
             updateGradeUI(points)
@@ -166,7 +167,6 @@ class HeadGradeActivity : AppCompatActivity() {
 
         saveButton.setOnClickListener {
             updateHead()
-
             goToParent()
         }
 
@@ -255,7 +255,7 @@ class HeadGradeActivity : AppCompatActivity() {
             grades.add(entry)
 
             val date = java.text.SimpleDateFormat("dd.MM.yy", Locale.getDefault())
-                .format(java.util.Date(data.x))
+                .format(java.util.Date(data.x.toLong()))
             dateLabels.add(date)
         }
 

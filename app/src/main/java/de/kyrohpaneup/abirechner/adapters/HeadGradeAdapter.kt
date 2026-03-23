@@ -7,28 +7,29 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import de.kyrohpaneup.abirechner.R
+import de.kyrohpaneup.abirechner.data.GradeManager
 import de.kyrohpaneup.abirechner.data.database.HeadGrade
 
 class HeadGradeAdapter(
     context: Context,
     headGrades: List<HeadGrade>,
-    private val getSubjectName: () -> String?
 ) : ArrayAdapter<HeadGrade>(context, 0, headGrades) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
         val headGrade = getItem(position)
 
+        val gradeManager = GradeManager()
+
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.head_grade_item, parent, false)
         }
 
-        val subjectTextView = view?.findViewById<TextView>(R.id.titleText)
+        val yearTextView = view?.findViewById<TextView>(R.id.titleText)
         val teacherTextView = view?.findViewById<TextView>(R.id.subtitleText)
         val gradeTextView = view?.findViewById<TextView>(R.id.gradeText)
 
-        val subjectName = headGrade?.subject?.let { getSubjectName() }
-        subjectTextView?.text = if (subjectName.isNullOrBlank()) "N/A" else subjectName
+        yearTextView?.text = if (headGrade?.year == null) "N/A" else gradeManager.getYearFromId(headGrade.year)
 
         teacherTextView?.text =
             if (headGrade?.teacher.isNullOrBlank()) "N/A" else headGrade?.teacher

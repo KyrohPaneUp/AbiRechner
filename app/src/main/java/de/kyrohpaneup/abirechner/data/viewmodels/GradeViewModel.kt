@@ -1,11 +1,11 @@
 package de.kyrohpaneup.abirechner.data.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.database.dao.GradeDao
 import de.kyrohpaneup.abirechner.data.database.HeadGrade
 import de.kyrohpaneup.abirechner.data.database.Subject
@@ -25,6 +25,9 @@ class GradeViewModel(
     private val _subject = MutableLiveData<Subject>()
     val subject: LiveData<Subject> = _subject
 
+    private val _allGrades = MutableLiveData<List<Grade>>()
+    val allGrades: LiveData<List<Grade>> = _allGrades
+
     fun loadData(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val grades = subjectDao.getHeadsForSubject(id)
@@ -32,6 +35,14 @@ class GradeViewModel(
 
             val subject = subjectDao.getSubjectFromId(id).firstOrNull()
             if (subject != null) _subject.postValue(subject!!)
+
+            val allGrades = mutableListOf<Grade>()
+
+            grades.forEach {
+                val children = gradeDao.getAllGradesForHead(it.id)
+                allGrades.addAll(children)
+            }
+            _allGrades.postValue(allGrades)
         }
     }
 
@@ -48,11 +59,25 @@ class GradeViewModel(
         }
     }
 
-    fun getSubjectName(): String {
-        if (subject.value?.name == null) {
-            return "N/A"
+    fun updateSubject(name: String) {
+        if (subject.value == null) return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val subject = subject.value!!
+            subject.name = name
+            subjectDao.update(subject)
         }
-        return subject.value?.name!!
+    }
+
+    fun deleteSubject() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (subject.value == null) return@launch
+            subjectDao.getHeadsForSubject(subject.value!!.id).forEach {
+                gradeDao.deleteHead(it)
+                gradeDao.deleteAllGradesForHead(it.id)
+            }
+            subjectDao.delete(subject.value!!)
+        }
     }
 }
 

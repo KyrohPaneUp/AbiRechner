@@ -49,10 +49,11 @@ class ParentGradeViewModel(
         }
     }
 
-    fun updateParent(name: String, weight: Int) {
+    fun updateParent(name: String, notes: String, weight: Int) {
         val current = _parentGrade.value ?: return
 
         current.name = name
+        current.notes = notes
         current.weight = weight
 
         viewModelScope.launch(Dispatchers.IO) {
