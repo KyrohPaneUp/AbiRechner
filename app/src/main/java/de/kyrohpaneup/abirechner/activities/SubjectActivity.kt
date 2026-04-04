@@ -4,9 +4,15 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -42,8 +48,14 @@ class SubjectActivity : AppCompatActivity() {
     private lateinit var gradeListView: ListView
     private lateinit var gradeAdapter: HeadGradeAdapter
     private lateinit var gradeChart: LineChart
+    private lateinit var examSubjectBox: CheckBox
+    private lateinit var examLayout: LinearLayout
+    private lateinit var doubleWeightBox: CheckBox
+    private lateinit var gradeSpinner: Spinner
 
     private lateinit var viewModel: GradeViewModel
+
+    private var examGrade: Int? = null
 
     private val gradeManager = GradeManager()
 
@@ -69,6 +81,7 @@ class SubjectActivity : AppCompatActivity() {
 
         observeViewModel()
         setupListeners()
+        setupSpinner()
     }
 
     private fun bindViews() {
@@ -78,6 +91,10 @@ class SubjectActivity : AppCompatActivity() {
         gradeChart = findViewById(R.id.grade_chart)
         saveButton = findViewById(R.id.save_button)
         deleteButton = findViewById(R.id.delete_button)
+        examSubjectBox = findViewById(R.id.exam_subject_checkbox)
+        examLayout = findViewById(R.id.hidden_layout)
+        doubleWeightBox = findViewById(R.id.subject_double_weight_checkbox)
+        gradeSpinner = findViewById(R.id.set_grade_spinner)
     }
 
     private fun setupList() {
@@ -93,6 +110,16 @@ class SubjectActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.subject.observe(this) { subject ->
             subjectText.text = subject.name
+            examSubjectBox.isChecked = subject.examSubject
+
+            examLayout.visibility = if (subject.examSubject) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+            doubleWeightBox.isChecked = subject.doubleWeight
+            gradeSpinner.setSelection(subject.examGrade?.let { it + 1 } ?: 0)
         }
 
         viewModel.grades.observe(this) { list ->
@@ -121,14 +148,56 @@ class SubjectActivity : AppCompatActivity() {
             viewModel.addHeadGrade()
         }
 
+        examSubjectBox.setOnClickListener {
+            examLayout.visibility = if (examSubjectBox.isChecked) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
+
         saveButton.setOnClickListener {
-            viewModel.updateSubject(subjectText.text.toString())
+            viewModel.updateSubject(subjectText.text.toString(),
+                examSubjectBox.isChecked,
+                doubleWeightBox.isChecked && examSubjectBox.isChecked,
+                if (examSubjectBox.isChecked) {
+                    examGrade
+                } else {
+                    null
+                })
             goToParent()
         }
 
         deleteButton.setOnClickListener {
             viewModel.deleteSubject()
             goToParent()
+        }
+    }
+
+    private fun setupSpinner() {
+        val pointLabels = mutableListOf("N/A")
+        pointLabels.addAll((0..15).map { "$it P." })
+
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            pointLabels
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        gradeSpinner.adapter = adapter
+
+        gradeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+                examGrade = if (pos == 0) {
+                    null
+                } else {
+                    pos - 1
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                examGrade = null
+            }
         }
     }
 

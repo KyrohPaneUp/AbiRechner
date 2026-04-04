@@ -51,4 +51,16 @@
 
     <!-- Dark theme is automatically handled by DayNight, but you can keep an empty override if needed -->
     <style name="Theme.AbiRechner.Dark" parent="Base.Theme.AbiRechner" />
+
+    <style name="TableCell">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:gravity">center</item>
+        <!-- This covers the black table background -->
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
+        <!-- Ensures text is readable on the Surface color -->
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
 </resources>

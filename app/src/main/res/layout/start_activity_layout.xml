@@ -8,6 +8,18 @@
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground">
 
+    <TextView
+        android:id="@+id/subject_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:text="Subjects"
+        android:layout_margin="@dimen/spacing_large"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <ListView
         android:id="@+id/subject_list_view"
@@ -17,12 +29,9 @@
         android:background="?attr/colorSurface"
         android:orientation="horizontal"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.072"
+        app:layout_constraintTop_toBottomOf="@id/subject_text"
         tools:visibility="visible">
 
     </ListView>
@@ -36,7 +45,70 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/subject_list_view"
-        app:layout_constraintVertical_bias="0.875"
         tools:ignore="MissingConstraints">
     </Button>
+
+    <TableLayout
+        android:id="@+id/grade_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1"
+        android:layout_margin="16dp"
+        android:background="@android:color/black"
+        android:padding="1dp"
+        app:layout_constraintTop_toBottomOf="@id/subject_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+
+    <!-- Row 1 -->
+    <TableRow android:layout_marginBottom="1dp">
+        <TextView
+            style="@style/TableCell"
+            android:text="E I"
+            android:layout_marginEnd="1dp"/>
+        <TextView
+            android:id="@+id/e1_value"
+            style="@style/TableCell" />
+    </TableRow>
+
+    <!-- Row 2 -->
+    <TableRow android:layout_marginBottom="1dp">
+        <TextView
+            style="@style/TableCell"
+            android:text="E II"
+            android:layout_marginEnd="1dp"/>
+        <TextView
+            android:id="@+id/e2_value"
+            style="@style/TableCell" />
+    </TableRow>
+
+    <!-- Row 3 -->
+    <TableRow android:layout_marginBottom="1dp">
+        <TextView
+            style="@style/TableCell"
+            android:text="Total"
+            android:textStyle="bold"
+            android:layout_marginEnd="1dp"/>
+        <TextView
+            android:id="@+id/total_value"
+            style="@style/TableCell"
+            android:textStyle="bold" />
+    </TableRow>
+
+    <!-- Row 4 -->
+    <TableRow>
+        <TextView
+            style="@style/TableCell"
+            android:text="Average"
+            android:textStyle="bold"
+            android:layout_marginEnd="1dp"/>
+        <TextView
+            android:id="@+id/grade_value"
+            style="@style/TableCell"
+            android:textStyle="bold" />
+    </TableRow>
+
+</TableLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

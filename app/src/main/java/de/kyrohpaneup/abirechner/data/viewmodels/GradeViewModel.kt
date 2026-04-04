@@ -59,12 +59,15 @@ class GradeViewModel(
         }
     }
 
-    fun updateSubject(name: String) {
+    fun updateSubject(name: String, examSubject: Boolean, doubleWeight: Boolean, examGrade: Int?) {
         if (subject.value == null) return
 
         viewModelScope.launch(Dispatchers.IO) {
             val subject = subject.value!!
             subject.name = name
+            subject.examSubject = examSubject
+            subject.doubleWeight = doubleWeight
+            subject.examGrade = examGrade
             subjectDao.update(subject)
         }
     }

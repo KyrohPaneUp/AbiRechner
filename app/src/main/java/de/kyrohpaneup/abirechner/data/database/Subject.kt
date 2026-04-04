@@ -13,5 +13,8 @@ import java.util.UUID
 )
 data class Subject(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    @ColumnInfo(name = "name") var name: String?
+    @ColumnInfo(name = "name") var name: String?,
+    @ColumnInfo(name = "exam_subject") var examSubject: Boolean = false,
+    @ColumnInfo(name = "double_weight") var doubleWeight: Boolean = false,
+    @ColumnInfo(name = "exam_grade") var examGrade: Int?
 )

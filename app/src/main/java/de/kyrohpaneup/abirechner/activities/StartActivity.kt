@@ -7,14 +7,15 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import de.kyrohpaneup.abirechner.R
 import de.kyrohpaneup.abirechner.adapters.SubjectAdapter
+import de.kyrohpaneup.abirechner.data.GradeManager
 import de.kyrohpaneup.abirechner.data.database.AppDatabase
 import de.kyrohpaneup.abirechner.data.database.Subject
-import de.kyrohpaneup.abirechner.data.database.dao.SubjectDao
 import de.kyrohpaneup.abirechner.data.viewmodels.SubjectViewModel
 import de.kyrohpaneup.abirechner.data.viewmodels.SubjectViewModelFactory
 import de.kyrohpaneup.abirechner.utils.Constant
@@ -26,6 +27,10 @@ class StartActivity : AppCompatActivity() {
     private lateinit var subjectListView: ListView
     private lateinit var subjectAdapter: SubjectAdapter
 
+    private lateinit var e1Value: TextView
+    private lateinit var e2Value: TextView
+    private lateinit var totalValue: TextView
+    private lateinit var gradeValue: TextView
 
     private lateinit var viewModel: SubjectViewModel
 
@@ -38,8 +43,10 @@ class StartActivity : AppCompatActivity() {
         bindViews()
         setupList()
 
-        val subjectDao: SubjectDao = AppDatabase.getDatabase(this).subjectDao()
-        val factory = SubjectViewModelFactory(subjectDao)
+        val db = AppDatabase.getDatabase(this)
+        val gradeDao = db.gradeDao()
+        val subjectDao = db.subjectDao()
+        val factory = SubjectViewModelFactory(gradeDao, subjectDao)
         viewModel = ViewModelProvider(this, factory)[SubjectViewModel::class]
 
         viewModel.loadData()
@@ -51,6 +58,11 @@ class StartActivity : AppCompatActivity() {
     private fun bindViews() {
         subjectListView = findViewById(R.id.subject_list_view)
         subjectButton = findViewById(R.id.subject_button)
+
+        e1Value = findViewById(R.id.e1_value)
+        e2Value = findViewById(R.id.e2_value)
+        totalValue = findViewById(R.id.total_value)
+        gradeValue = findViewById(R.id.grade_value)
     }
 
     private fun setupList() {
@@ -64,15 +76,28 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
+        val gradeManager = GradeManager()
+
         viewModel.subjects.observe(this) { list ->
             subjects.clear()
             subjects.addAll(list)
             subjectAdapter.notifyDataSetChanged()
         }
+
+        viewModel.heads.observe(this) { list ->
+            val e1 = gradeManager.calculateE1Grade(subjects, list)
+            val e2 = gradeManager.calculateE2Grade(subjects)
+            val total = e1 + e2
+            val average = gradeManager.calculateAverageFromPoints(total) ?: "N/A"
+            "$e1/600".also { e1Value.text = it }
+            "$e2/300".also { e2Value.text = it }
+            "$total/900".also { totalValue.text = it }
+            "$average".also { gradeValue.text = it }
+        }
     }
 
     private fun setupListeners() {
-        subjectButton.setOnClickListener() {
+        subjectButton.setOnClickListener {
             showTextInputDialog()
         }
     }

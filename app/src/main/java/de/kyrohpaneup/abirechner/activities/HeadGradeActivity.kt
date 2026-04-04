@@ -2,6 +2,7 @@ package de.kyrohpaneup.abirechner.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -37,7 +38,6 @@ class HeadGradeActivity : AppCompatActivity() {
     private lateinit var subjectView: TextView
     private lateinit var teacherView: EditText
     private lateinit var yearView: MaterialAutoCompleteTextView
-
 
     private lateinit var addGradeButton: Button
     private lateinit var saveButton: Button
@@ -143,6 +143,7 @@ class HeadGradeActivity : AppCompatActivity() {
         }
 
         viewModel.allGrades.observe(this) { list ->
+            if (list.filter { !it.isCalculated && it.weight != 0}.size < 2) return@observe
             loadChart(gradeManager.calculateGradeGraph(viewModel.getHeadGradeId(), list))
         }
 

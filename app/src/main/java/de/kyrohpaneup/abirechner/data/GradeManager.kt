@@ -2,6 +2,7 @@ package de.kyrohpaneup.abirechner.data
 
 import de.kyrohpaneup.abirechner.data.database.Grade
 import de.kyrohpaneup.abirechner.data.database.HeadGrade
+import de.kyrohpaneup.abirechner.data.database.Subject
 import java.util.UUID
 import kotlin.math.floor
 import kotlin.math.round
@@ -179,6 +180,80 @@ class GradeManager {
         }
 
         return resultList
+    }
+
+    fun calculateE1Grade(subjects: List<Subject>, heads: List<HeadGrade>): Int {
+        val pointSum = 40 * calculateALevelsTotalPoints(subjects, heads)
+        val finalHeads = heads.filter { it.year != null && it.year!! >= 12.0 }
+        val division = finalHeads.size + finalHeads.sumOf { head ->
+            subjects.count { it.doubleWeight && it.id == head.subject }
+        }
+        return if (division == 0) 0 else pointSum / division
+    }
+
+    fun calculateE2Grade(subjects: List<Subject>): Int {
+        var pointSum = 0
+        subjects.filter { it.examSubject && it.examGrade != null }.forEach {
+            pointSum += it.examGrade?.times(4) ?: 0
+        }
+        return pointSum
+    }
+
+    private fun calculateALevelsTotalPoints(subjects: List<Subject>, heads: List<HeadGrade>): Int {
+        val headsBySubject = heads.groupBy { it.subject }
+        val subjectById = subjects.associateBy { it.id }
+
+        var points = 0
+
+        for (subject in subjectById.values) {
+            val isDoubleWeight = subject.doubleWeight
+            val headGrades = headsBySubject.getOrDefault(subject.id, emptyList()).filter { it.year != null && it.year!! >= 12.0}
+            for (headGrade in headGrades) {
+                if (headGrade.grade == null) continue
+                points += if (isDoubleWeight) (headGrade.grade!! * 2)
+                else headGrade.grade!!
+            }
+        }
+
+        return points
+    }
+
+    fun calculateAverageFromPoints(points: Int): Double? {
+        return when {
+            points >= 823 -> 1.0
+            points >= 805 -> 1.1
+            points >= 787 -> 1.2
+            points >= 769 -> 1.3
+            points >= 751 -> 1.4
+            points >= 733 -> 1.5
+            points >= 715 -> 1.6
+            points >= 697 -> 1.7
+            points >= 679 -> 1.8
+            points >= 661 -> 1.9
+            points >= 643 -> 2.0
+            points >= 625 -> 2.1
+            points >= 607 -> 2.2
+            points >= 589 -> 2.3
+            points >= 571 -> 2.4
+            points >= 553 -> 2.5
+            points >= 535 -> 2.6
+            points >= 517 -> 2.7
+            points >= 499 -> 2.8
+            points >= 481 -> 2.9
+            points >= 463 -> 3.0
+            points >= 445 -> 3.1
+            points >= 427 -> 3.2
+            points >= 409 -> 3.3
+            points >= 391 -> 3.4
+            points >= 373 -> 3.5
+            points >= 355 -> 3.6
+            points >= 337 -> 3.7
+            points >= 319 -> 3.8
+            points >= 301 -> 3.9
+            points == 300 -> 4.0
+
+            else -> { null }
+        }
     }
 }
 
